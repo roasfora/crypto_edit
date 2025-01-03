@@ -1,0 +1,17 @@
+Crypto_Project/
+│
+├── .venv/                 # Virtual environment (ignored in Git)
+├── data/                  # Folder to store raw and processed data
+├── src/                   # Source code for the project
+│   ├── __init__.py        # Marks src as a package
+│   ├── main.py            # Main script to run the project
+│   ├── api_client.py      # Module for API interactions
+│   └── utils.py           # Helper functions
+├── tests/                 # Test scripts
+│   ├── __init__.py
+│   └── test_api_client.py # Unit tests for API interactions
+├── docs/                  # Documentation
+│   └── README.md          # Project README file
+├── .gitignore             # Git ignore file
+├── requirements.txt       # Dependencies
+└── setup.py               # Optional setup script if packaging the project
