@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.models import BitcoinPriceModel
-from src.api_client import fetch_bitcoin_price
+from src.api_coinbase import fetch_bitcoin_price
 
 def test_fetch_bitcoin_price():
     # Fetch the data
