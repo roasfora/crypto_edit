@@ -1,0 +1,26 @@
+name: crypto_project
+version: 1.0
+config-version: 2
+
+profile: crypto_project
+
+# Directories for models and seeds
+model-paths: ["models"]
+seed-paths: ["seeds"]
+
+# Specify test and snapshot paths (optional)
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+
+# Directory for macros (optional)
+macro-paths: ["macros"]
+
+# Target schema configuration
+target-path: "target"  # Where dbt will store compiled SQL and artifacts
+clean-targets:
+  - "target"
+  - "dbt_modules"
+
+models:
+  crypto_project:
+    +materialized: table

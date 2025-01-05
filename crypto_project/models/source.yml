@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: crypto_data
+    database: test_crypto
+    schema: public
+    tables:
+      - name: bitcoin_prices
+      - name: eur_to_usd_rates
