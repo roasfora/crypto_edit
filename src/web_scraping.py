@@ -1,17 +1,16 @@
 import os
 import pandas as pd
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 def fetch_eur_to_usd_rate():
-    """Scrape EUR to USD exchange rate and save to a CSV file."""
+    """Scrape EUR to USD exchange rate and return the data."""
     try:
         # URL for scraping
         url = "https://www.x-rates.com/calculator/?from=EUR&to=USD&amount=1"
         response = requests.get(url)
 
-        # Check if the request was successful
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, "html.parser")
 
@@ -20,22 +19,18 @@ def fetch_eur_to_usd_rate():
             if rate_element:
                 rate = float(rate_element.text.split()[0])
 
-                # Prepare data for saving
+                # Prepare data
                 data = {
-                    "timestamp": response.headers.get("Date"),
+                    "timestamp": datetime.utcnow().isoformat(),  # Use UTC for consistency
                     "eur_to_usd_rate": rate
                 }
-
-                # Save to CSV
-                save_to_csv(data)
-                print(f"EUR to USD Rate: {rate}")
+                return data
             else:
                 raise Exception("Could not find the exchange rate on the webpage.")
         else:
             raise Exception(f"Failed to fetch the webpage: {response.status_code}")
-
     except Exception as e:
-        print(f"Error: {e}")
+        raise RuntimeError(f"Error scraping EUR to USD exchange rate: {e}")
 
 def save_to_csv(data, filename="eur_to_usd_rates.csv"):
     """Save EUR to USD exchange rate data to a CSV file."""
@@ -56,6 +51,16 @@ def save_to_csv(data, filename="eur_to_usd_rates.csv"):
     df.to_csv(filepath, index=False)
     print(f"Data saved to {filepath}")
 
-# Run the function if this file is executed
+def main():
+    try:
+        # Fetch EUR to USD exchange rate data
+        rate_data = fetch_eur_to_usd_rate()
+
+        # Print and save the data
+        print(rate_data)
+        save_to_csv(rate_data, "eur_to_usd_rates.csv")
+    except Exception as e:
+        print(f"Error: {e}")
+
 if __name__ == "__main__":
-    fetch_eur_to_usd_rate()
+    main()
