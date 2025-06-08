@@ -1,95 +1,167 @@
-#Crypto Project
-This project is a data pipeline designed to collect and manage cryptocurrency data. It integrates with the Coinbase API to fetch Bitcoin price data and scrapes the EUR to USD exchange rate from the web. The collected data is stored locally in CSV files and can be further uploaded to a PostgreSQL database for analysis. Additionally, this project leverages dbt for data transformation and analytics.
+# 📈 Crypto Project – Automated Data Pipeline for Bitcoin & FX Rates
 
-##Project Overview
-The project automates the collection of cryptocurrency and exchange rate data. It consists of two main components:
+This project implements an automated data pipeline to collect, store, and analyze cryptocurrency price data (Bitcoin) and EUR/USD exchange rates. It integrates with the **Coinbase API** and performs **web scraping** from *x-rates.com*. The pipeline supports **local CSV storage**, **PostgreSQL integration**, and **dbt transformations** for analytics. CI/CD is handled via **GitHub Actions**.
 
-###API Integration:
+---
 
-Connects to the Coinbase API to fetch real-time Bitcoin price data.
-Ensures accurate timestamping of the data for historical tracking.
+## 🚀 Project Overview
 
-###Web Scraping:
+This pipeline is split into two main components:
 
-Scrapes the EUR to USD exchange rate from x-rates.com.
-Provides an up-to-date exchange rate for financial analysis.
-The pipeline is built using Python and includes functionality for storing the data in local CSV files and uploading it to a PostgreSQL database.
+### 🔗 1. API Integration (Coinbase)
 
-##Project Structure
+- Fetches real-time Bitcoin price data.
+- Records timestamps and price in USD.
+- Stores the data locally in CSV.
 
-plaintext
-Copy code
+### 🕸️ 2. Web Scraping (x-rates.com)
+
+- Extracts current EUR to USD exchange rate.
+- Includes timestamping for historical analysis.
+- Stores the data in CSV for further transformation or upload.
+
+---
+
+## 📁 Project Structure
+
+```
 Crypto_Project/
 │
-├── src/                      # Source code for the project
-│   ├── api_client.py         # Fetches Bitcoin price data from Coinbase API
-│   ├── web_scraping.py       # Scrapes EUR to USD exchange rate data
-│   ├── postgresql.py         # Handles uploading CSV data to PostgreSQL
-│   ├── main.py               # Orchestrates data collection and saving processes
-│   └── __init__.py           # Marks src as a package
+├── src/                    # Source code for pipeline
+│   ├── api_client.py       # Bitcoin price fetcher
+│   ├── web_scraping.py     # FX rate scraper
+│   ├── postgresql.py       # Upload logic for PostgreSQL
+│   ├── main.py             # Pipeline orchestrator
+│   └── __init__.py
 │
-├── data/                     # Contains raw and processed CSV files
-│   ├── bitcoin_prices.csv    # Bitcoin price data
-│   ├── eur_to_usd_rates.csv  # EUR to USD exchange rates
+├── data/                   # Raw + processed CSV files
+│   ├── bitcoin_prices.csv
+│   └── eur_to_usd_rates.csv
 │
-├── tests/                    # Unit tests for the project
-│   ├── test_api_client.py    # Tests for API integration
-│   ├── test_web_scraping.py  # Tests for web scraping
-│   ├── __init__.py           # Marks tests as a package
+├── tests/                  # Unit tests
+│   ├── test_api_client.py
+│   ├── test_web_scraping.py
+│   └── __init__.py
 │
-├── docs/                     # Documentation files
-│   └── README.md             # Project documentation
+├── docs/                   # Documentation
+│   └── README.md
 │
 └── .github/
     └── workflows/
-        └── test_pipeline.yml # GitHub Actions configuration for CI pipeline
+        └── test_pipeline.yml  # GitHub Actions for CI
+```
 
-##How It Works
+---
 
-###1. Bitcoin Price Data Collection
-The api_client.py script connects to the Coinbase API to fetch the current Bitcoin price. The data includes:
+## ⚙️ How It Works
 
-Timestamp: When the price was fetched (in UTC).
-Price: Current price of Bitcoin in USD.
-Currency: Currency code (e.g., "USD").
-The data is saved in a CSV file (data/bitcoin_prices.csv) for further use.
+### 🪙 Bitcoin Price Collection
 
-###2. EUR to USD Exchange Rate Scraping
-The web_scraping.py script scrapes the EUR to USD exchange rate from x-rates.com. The data includes:
+- Script: `src/api_client.py`
+- Output: `data/bitcoin_prices.csv`
+- Columns:
+  - `timestamp` (UTC)
+  - `price` (USD)
+  - `currency` (e.g., USD)
 
-Timestamp: The time of scraping (in UTC).
-Exchange Rate: Current EUR to USD rate.
-The data is saved in a CSV file (data/eur_to_usd_rates.csv) for later analysis.
+### 💱 EUR to USD Exchange Rate Scraping
 
-###3. Data Storage and Analysis
-CSV Files: The data is stored locally in CSV files.
-PostgreSQL: Data can be uploaded to a PostgreSQL database for further analysis using the postgresql.py script.
-DBT: Enables transformation and analytics on the stored data.
+- Script: `src/web_scraping.py`
+- Output: `data/eur_to_usd_rates.csv`
+- Columns:
+  - `timestamp` (UTC)
+  - `exchange_rate` (EUR → USD)
 
+### 🧱 Data Storage & Transformation
 
-##Setup and Prerequisites
-###Prerequisites
-Python 3.8 or higher
-PostgreSQL database
-pip (Python package manager)
-Recommended: Virtual environment for managing dependencies
+- **Local**: CSV format
+- **PostgreSQL**: Use `postgresql.py` to upload to DB
+- **dbt**: For transformations and business logic modeling
 
-###Installation
+---
 
-Clone the repository:
+## 🔧 Setup & Installation
 
-bash
-Copy code
+### ✅ Prerequisites
+
+- Python ≥ 3.8
+- PostgreSQL database (local or hosted)
+- `pip` (Python package installer)
+- (Optional) `virtualenv` or `venv`
+
+### 📦 Installation Steps
+
+```bash
+# Clone the repo
 git clone https://github.com/roasfora/crypto_edit.git
 cd crypto_edit
-Set up a virtual environment:
 
-bash
-Copy code
+# Set up virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-Install dependencies:
+source .venv/bin/activate        # Linux/macOS
+# OR
+.venv\Scripts\activate           # Windows
 
-bash
-Copy code
+# Install dependencies
 pip install -r requirements.txt
+```
+
+---
+
+## 🧪 Running the Project
+
+### 1. Run API Client
+```bash
+python src/api_client.py
+```
+
+### 2. Run Web Scraper
+```bash
+python src/web_scraping.py
+```
+
+### 3. Upload to PostgreSQL (if configured)
+```bash
+python src/postgresql.py
+```
+
+### 4. Run full pipeline
+```bash
+python src/main.py
+```
+
+---
+
+## 📈 Analytics with dbt (Optional)
+
+If you're using `dbt`:
+
+```bash
+cd dbt_project/
+dbt run
+```
+
+---
+
+## ✅ CI/CD
+
+- GitHub Actions automatically tests scripts on push.
+- Located in `.github/workflows/test_pipeline.yml`.
+
+---
+
+## 📃 License
+
+This project is licensed under the **MIT License** — feel free to use and modify with attribution.
+
+---
+
+## 🙋‍♂️ Author
+
+**Rodrigo Moutinho**  
+📧 [roasfora@hotmail.com](mailto:roasfora@hotmail.com)  
+🔗 [GitHub](https://github.com/roasfora) | [LinkedIn](https://www.linkedin.com/in/rodrigo-moutinho-31a03778/)  
+
+---
+
+> 🚀 Built for learning, experimentation, and production-ready ETL workflows.
